@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: grafana-infrastructure-storage
+  namespace: kube-system
+  labels:
+    purpose: grafana-infrastructure
+    type: local
+spec:
+  capacity:
+    storage: 128Gi
+  accessModes:
+    - ReadWriteOnce
+    - ReadOnlyMany
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: "/mnt/data/grafana-infrastructure/"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-infrastructure-storage-claim
+  namespace: kube-system
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 128Gi
+  storageClassName: manual
+  selector:
+    matchLabels:
+      purpose: grafana-infrastructure
